@@ -8,3 +8,5 @@ SELECT c.region,SUM(o.sales) as celkova_hodnota_predaja FROM customers c LEFT JO
 SELECT p.product_name,SUM(o.sales) AS celkova_hodnota_predaja FROM products p LEFT JOIN orders o ON p.product_id = o.product_id GROUP BY p.product_name;
 --uloha 6 
 SELECT c.customer_name,o.order_id,o.sales FROM customers c FULL JOIN orders o ON o.customer_id = c.customer_id;
+--uloha 7
+SELECT c.region,SUM(o.sales) AS celkova_hodnota_predaja FROM customers c JOIN orders o ON o.customer_id = c.customer_id GROUP BY c.region;
