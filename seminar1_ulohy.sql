@@ -20,3 +20,5 @@ SELECT c.customer_name,SUM(o.sales) AS celkova_suma FROM customers c JOIN orders
 SELECT c.region,SUM(o.sales) AS celkova_hodnota,AVG(o.discount) AS priemerna_zlava,COUNT(o.order_id) AS pocet_objednavok FROM orders o JOIN customers c ON o.customer_id = c.customer_id GROUP BY c.region; 
 -- uloha 12
 SELECT c.region,COUNT(CASE WHEN o.sales >1000 THEN 1 END) AS high_value ,COUNT(CASE WHEN o.sales <= 1000 THEN 1 END) AS low_value FROM customers c JOIN orders o ON o.customer_id = c.customer_id GROUP BY c.region;
+-- uloha 13 
+SELECT c.customer_name,SUM(o.sales) AS celkova_suma,AVG(o.discount) AS priemerna_zlava,COUNT(o.order_id) AS pocet_objednavok,CASE WHEN SUM(o.sales) > 2500 THEN 'VIP' ELSE 'REGULAR' END AS typ_zakaznika FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_name ORDER BY SUM(o.sales) DESC;
