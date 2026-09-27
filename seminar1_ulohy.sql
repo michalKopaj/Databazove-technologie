@@ -16,3 +16,5 @@ SELECT c.customer_name,count(order_id) AS pocet_objednavok FROM customers c LEFT
 SELECT p.category, AVG(o.discount) AS priemerna_zlava FROM products p JOIN orders o ON o.product_id = p.product_id GROUP BY p.category;
 --uloha 10 
 SELECT c.customer_name,SUM(o.sales) AS celkova_suma FROM customers c JOIN orders o ON o.customer_id = c.customer_id GROUP BY c.customer_name  HAVING SUM(o.sales) >2000;
+--uloha 11
+SELECT c.region,SUM(o.sales) AS celkova_hodnota,AVG(o.discount) AS priemerna_zlava,COUNT(o.order_id) AS pocet_objednavok FROM orders o JOIN customers c ON o.customer_id = c.customer_id GROUP BY c.region; 
