@@ -7,3 +7,5 @@ SELECT * FROM flourmills_sales
 WHERE product_category=(SELECT product_category FROM flourmills_sales GROUP BY product_category ORDER BY total_amount LIMIT 1
 
 );
+--ULOHA3
+SELECT product_name,total_amount,(SELECT SUM(total_amount) FROM flourmills_sales) AS avg_amount  FROM flourmills_sales;
