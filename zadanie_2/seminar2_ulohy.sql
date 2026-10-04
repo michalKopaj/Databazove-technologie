@@ -32,3 +32,16 @@ SELECT s1.product_name,s1.region,s1.total_amount,( SELECT MIN(s2.total_amount)FR
 SELECT s1.*
 FROM flourmills_sales AS s1
 WHERE EXISTS (SELECT 1 FROM flourmills_sales AS s2 WHERE s2.product_name = s1.product_name GROUP BY s2.product_name HAVING COUNT(DISTINCT EXTRACT(MONTH FROM s2.sale_date)) > 1);
+--uloha10
+SELECT s1.product_category,s1.product_name,s1.total_amount
+FROM flourmills_sales AS s1
+WHERE EXISTS (SELECT 1 FROM flourmills_sales AS s2 WHERE s2.product_category = s1.product_category AND s2.total_amount > 200000)ORDER BY s1.sales_id;
+--uloha11
+SELECT DISTINCT s1.product_category FROM flourmills_sales AS s1 WHERE EXISTS (SELECT 1 FROM flourmills_sales AS s2 WHERE s2.product_category = s1.product_category GROUP BY s2.product_category HAVING COUNT(DISTINCT s2.region) > 3)ORDER BY s1.product_category;
+--uloha12
+SELECT s1.* FROM flourmills_sales AS s1 WHERE EXISTS ( SELECT 1 FROM flourmills_sales AS s2 WHERE s2.region = s1.region AND EXTRACT(YEAR FROM s2.sale_date) = 2024)ORDER BY s1.sales_id;
+--uloha13
+SELECT COUNT(*)
+FROM (SELECT DISTINCT s1.product_category FROM flourmills_sales AS s1 WHERE NOT EXISTS ( SELECT 1 FROM flourmills_sales AS s2 WHERE s2.product_category = s1.product_category  AND s2.total_amount > 500000)) AS t;
+--uloha14
+SELECT DISTINCT s1.region FROM flourmills_sales AS s1 WHERE NOT EXISTS ( SELECT 1 FROM flourmills_sales AS s2 WHERE s2.region = s1.region AND s2.product_category = 'Flour') ORDER BY s1.region;
