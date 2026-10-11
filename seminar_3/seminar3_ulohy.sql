@@ -21,3 +21,33 @@ SELECT c.region,
 FROM customers AS c
 JOIN orders AS o ON o.customer_id = c.customer_id
 GROUP BY c.region,DATE_TRUNC('month',o.order_date);
+--zadanie3
+CREATE VIEW analyst_orders AS
+SELECT order_id,
+       customer_id,
+       product_id,
+       sales,
+       quantity,
+       discount
+FROM orders ;
+--zadanie4 
+CREATE INDEX idx_orders_customer_id ON orders (customer_id);
+
+SELECT *
+FROM orders
+WHERE customer_id = 'C001';
+
+--zadanie6
+CREATE INDEX idx_orders_region_category ON orders (customer_id, order_date);
+
+SELECT o.*, c.customer_name, c.region
+FROM orders o
+JOIN customers c ON c.customer_id = o.customer_id
+WHERE c.region = 'West'
+  AND o.order_date >= '2024-01-01';
+
+--zadanie7
+EXPLAIN ANALYZE
+SELECT *
+FROM orders
+WHERE customer_id = 'C001';
