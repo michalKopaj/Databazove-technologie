@@ -55,6 +55,47 @@ SELECT *
 FROM orders
 WHERE customer_id = 'C001';
 
+--zadanie8
+DROP PROCEDURE IF EXISTS get_customer_sales;
+
+CREATE PROCEDURE get_customer_sales(
+    p_customer_id VARCHAR(20)
+)
+LANGUAGE plpgsql
+AS $procedure$
+DECLARE
+    v_total NUMERIC(12,2);
+BEGIN
+    SELECT SUM(sales)
+    INTO v_total
+    FROM orders
+    WHERE customer_id = p_customer_id;
+
+    RAISE NOTICE 'Zákazník %: celkový predaj = %', p_customer_id, v_total;
+END;
+$procedure$;
+
+CALL get_customer_sales('C001');
+--zadanie9
+DROP PROCEDURE IF EXISTS apply_regional_discount;
+
+CREATE PROCEDURE apply_regional_discount(
+    p_region_name   VARCHAR(20),
+    p_discount_rate NUMERIC(5,2)
+)
+LANGUAGE plpgsql
+AS $procedure$
+BEGIN
+    UPDATE orders o
+    SET sales = o.sales * (1 - p_discount_rate)
+    FROM customers c
+    WHERE c.customer_id = o.customer_id
+      AND c.region = p_region_name;
+
+    RAISE NOTICE 'Zľava % bola aplikovaná na región %', p_discount_rate, p_region_name;
+END;
+$procedure$;
+
 --zadanie11
 DROP PROCEDURE IF EXISTS get_sales_between;
 
