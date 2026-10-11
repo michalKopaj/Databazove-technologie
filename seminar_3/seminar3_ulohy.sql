@@ -36,6 +36,9 @@ CREATE INDEX idx_orders_customer_id ON orders (customer_id);
 SELECT *
 FROM orders
 WHERE customer_id = 'C001';
+--zadanie5 
+
+
 
 --zadanie6
 CREATE INDEX idx_orders_region_category ON orders (customer_id, order_date);
@@ -51,3 +54,26 @@ EXPLAIN ANALYZE
 SELECT *
 FROM orders
 WHERE customer_id = 'C001';
+
+--zadanie11
+DROP PROCEDURE IF EXISTS get_sales_between;
+
+CREATE PROCEDURE get_sales_between(
+    p_start_date DATE,
+    p_end_date   DATE
+)
+LANGUAGE plpgsql
+AS $procedure$
+DECLARE
+    v_total NUMERIC(12,2);
+BEGIN
+    SELECT COALESCE(SUM(sales), 0)
+    INTO v_total
+    FROM orders
+    WHERE order_date BETWEEN p_start_date AND p_end_date;
+
+    RAISE NOTICE 'Obdobie od % do %: celkový predaj = %', p_start_date, p_end_date, v_total;
+END;
+$procedure$;
+
+CALL get_sales_between('2024-01-01', '2024-03-31');
