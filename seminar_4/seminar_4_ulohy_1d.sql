@@ -77,4 +77,36 @@ FROM x
 WHERE last_order_date < latest_order_date - INTERVAL '90 days'
 ORDER BY last_order_date;
 --uloha7
+WITH monthly AS (
+    SELECT DATE_TRUNC('month', order_date)::date AS month,
+           SUM(sales) AS monthly_sales
+    FROM orders
+    GROUP BY 1
+),
+lagged AS (
+    SELECT month, monthly_sales,
+           LAG(monthly_sales) OVER (ORDER BY month) AS prev_month_sales
+    FROM monthly
+)
+SELECT month, monthly_sales, prev_month_sales,
+       monthly_sales - prev_month_sales AS sales_change,
+       ROUND(((monthly_sales - prev_month_sales) / prev_month_sales * 100)::numeric, 2) AS growth_percentage
+FROM lagged
+ORDER BY month;
+--uloha8
+WITH first_purchase AS (
+    SELECT customer_id,
+           DATE_TRUNC('month', MIN(order_date))::date AS first_month
+    FROM orders
+    GROUP BY customer_id
+)
+SELECT COUNT(*) AS returned_customers
+FROM first_purchase f
+WHERE f.first_month = DATE '2024-06-01'
+  AND EXISTS (
+      SELECT 1
+      FROM orders o
+      WHERE o.customer_id = f.customer_id
+        AND DATE_TRUNC('month', o.order_date) > f.first_month
+  );
 
