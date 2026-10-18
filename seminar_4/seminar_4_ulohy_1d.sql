@@ -1,0 +1,37 @@
+--uloha1
+SELECT customer_name, order_id, order_date
+FROM (
+    SELECT c.customer_name, o.order_id, o.order_date,
+           ROW_NUMBER() OVER (
+               PARTITION BY c.customer_id
+               ORDER BY o.order_date DESC, o.order_id DESC
+           ) AS rn
+    FROM customers c
+    JOIN orders o ON o.customer_id = c.customer_id
+) t
+WHERE rn <= 2
+ORDER BY customer_name, rn;
+--uloha2
+WITH customer_profit AS (
+    SELECT c.region, c.customer_id, c.customer_name,
+           SUM(o.profit) AS total_profit
+    FROM customers c
+    JOIN orders o ON o.customer_id = c.customer_id
+    GROUP BY c.region, c.customer_id, c.customer_name
+)
+SELECT region, customer_name, total_profit,
+       RANK()       OVER (PARTITION BY region ORDER BY total_profit DESC) AS rank_profit,
+       DENSE_RANK() OVER (PARTITION BY region ORDER BY total_profit DESC) AS dense_rank_profit
+FROM customer_profit
+ORDER BY region, rank_profit;
+--uloha3
+WITH customer_sales AS (
+    SELECT c.customer_id, c.customer_name, SUM(o.sales) AS total_sales
+    FROM customers c
+    JOIN orders o ON o.customer_id = c.customer_id
+    GROUP BY c.customer_id, c.customer_name
+)
+SELECT customer_name, total_sales,
+       NTILE(4) OVER (ORDER BY total_sales DESC) AS quartile
+FROM customer_sales
+ORDER BY total_sales DESC;
