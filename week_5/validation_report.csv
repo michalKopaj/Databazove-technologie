@@ -1,0 +1,12 @@
+rule,error_count,severity
+invalid_orderid_format,0,kriticka
+duplicate_orderid,22,kriticka
+invalid_region,0,kriticka
+invalid_product,31,kriticka
+invalid_quantity,29,kriticka
+invalid_sales_amount,22,kriticka
+invalid_discount,29,upozornenie
+invalid_order_date,3,kriticka
+invalid_delivery_date,10,kriticka
+delivery_before_order,18,kriticka
+invalid_phone,34,upozornenie
